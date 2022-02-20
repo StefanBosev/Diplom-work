@@ -21,15 +21,18 @@ import java.util.List;
 
 public class DevicesActivity extends AppCompatActivity {
 
+    // Main body of the activity
     CoordinatorLayout activityBody;
+    // List of devices
     LinearLayout devicesList;
 
-
-    private static LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-            LinearLayout.LayoutParams.WRAP_CONTENT,
+    // Layout specifics for each device card
+    private static LinearLayout.LayoutParams devicesLayout = new LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT,
             LinearLayout.LayoutParams.WRAP_CONTENT
     );
 
+    // List of all devices
     private static List<String> devices = new ArrayList<>();
 
     public static void addDevice(String device) {
@@ -41,19 +44,22 @@ public class DevicesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_devices);
 
-        layoutParams.setMargins(25, 5, 25, 10);
-        layoutParams.gravity = Gravity.CENTER_HORIZONTAL;
+        // Adding more specifics to the layout of the devices
+        devicesLayout.setMargins(25, 5, 25, 10);
+        devicesLayout.gravity = Gravity.CENTER_HORIZONTAL;
 
+        // Setting a value and background color for main body of the activity
         activityBody = (CoordinatorLayout) findViewById(R.id.devicesActivityBody);
         activityBody.setBackgroundColor(Color.WHITE);
 
+        // Setting a value for the view list of the device cards
         devicesList = (LinearLayout) findViewById(R.id.devicesList);
 
+        // Visualising all available devices on every initialization of activity
         for (String device : DevicesActivity.devices) {
             System.out.println(device);
             addNewDeviceCard(device);
         }
-
 
         FloatingActionButton fab = findViewById(R.id.addNewDevice);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -73,7 +79,7 @@ public class DevicesActivity extends AppCompatActivity {
     public void addNewDeviceCard(String deviceName) {
         CardView newDevice = new CardView(getApplicationContext());
 
-        newDevice.setLayoutParams(DevicesActivity.layoutParams);
+        newDevice.setLayoutParams(DevicesActivity.devicesLayout);
         newDevice.setPadding(25, 25, 25, 25);
         newDevice.setCardBackgroundColor(0xFF84C984);
         newDevice.setMaxCardElevation(60);
@@ -90,7 +96,7 @@ public class DevicesActivity extends AppCompatActivity {
         });
 
         TextView text = new TextView(getApplicationContext());
-        text.setLayoutParams(DevicesActivity.layoutParams);
+        text.setLayoutParams(DevicesActivity.devicesLayout);
         text.setText(deviceName);
         text.setTextColor(Color.WHITE);
         text.setPadding(25, 25, 25, 25);
