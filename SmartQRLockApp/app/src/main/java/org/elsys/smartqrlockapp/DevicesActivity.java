@@ -11,12 +11,20 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
+import android.util.JsonReader;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,9 +65,43 @@ public class DevicesActivity extends AppCompatActivity {
         devicesList = (LinearLayout) findViewById(R.id.devicesList);
 
         // Visualising all available devices on every initialization of activity
-        for (String device : DevicesActivity.devices) {
-            System.out.println(device);
-            addNewDeviceCard(device);
+        File directory = new File(this.getFilesDir() + File.separator + "demo-json-dir");
+        File[] allDevices = directory.listFiles();
+
+//        if (allDevices != null) {
+//            for (File file : allDevices) {
+//                file.delete();
+//            }
+//        }
+
+        JSONObject cardDetails = null;
+
+        for (File device : allDevices) {
+            StringBuilder data = new StringBuilder();
+
+            try {
+                BufferedReader bufReader = new BufferedReader(new FileReader(device));
+                String line;
+
+                while ((line = bufReader.readLine()) != null) {
+                    data.append(line);
+                    data.append('\n');
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+
+            try {
+                cardDetails = new JSONObject(data.toString());
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            if (cardDetails != null) {
+                visualiseDeviceCard(cardDetails);
+            }
+
         }
 
         FloatingActionButton fab = findViewById(R.id.addNewDevice);
@@ -77,7 +119,9 @@ public class DevicesActivity extends AppCompatActivity {
         startActivity(i);
     }
 
-    public void addNewDeviceCard(String deviceName) {
+
+
+    public void visualiseDeviceCard(JSONObject cardInfo) {
         CardView newDevice = new CardView(getApplicationContext());
 
         newDevice.setLayoutParams(DevicesActivity.devicesLayout);
@@ -94,7 +138,7 @@ public class DevicesActivity extends AppCompatActivity {
                 Intent editDeviceIntent = new Intent(v.getContext(), EditDeviceActivity.class);
                 Bundle deviceData = new Bundle();
 
-                deviceData.putString("name", deviceName);
+                deviceData.putString("name", cardInfo.toString());
 
                 editDeviceIntent.putExtras(deviceData);
                 startActivity(editDeviceIntent);
@@ -103,6 +147,15 @@ public class DevicesActivity extends AppCompatActivity {
 
         TextView text = new TextView(getApplicationContext());
         text.setLayoutParams(DevicesActivity.devicesLayout);
+
+        String deviceName = "";
+        try {
+            deviceName = cardInfo.getString("name");
+        } catch (JSONException e) {
+            deviceName = "Error extracting name from json";
+            e.printStackTrace();
+        }
+
         text.setText(deviceName);
         text.setTextColor(Color.WHITE);
         text.setPadding(25, 25, 25, 25);
