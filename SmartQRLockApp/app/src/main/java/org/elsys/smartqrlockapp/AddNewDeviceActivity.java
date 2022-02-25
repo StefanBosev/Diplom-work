@@ -16,6 +16,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class AddNewDeviceActivity extends AppCompatActivity {
 
@@ -37,7 +42,6 @@ public class AddNewDeviceActivity extends AppCompatActivity {
     public void returnToMainPage() {
 
         Intent intent = new Intent(this, DevicesActivity.class);
-//        intent.putExtra("device_name", deviceName.getText().toString());
 
         startActivity(intent);
     }

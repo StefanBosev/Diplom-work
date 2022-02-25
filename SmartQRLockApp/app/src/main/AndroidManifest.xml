@@ -8,11 +8,13 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.SmartQRLockApp">
-        <activity android:name=".AddNewDeviceActivity"></activity>
+        android:theme="@style/Theme.SmartQRLockApp.NoActionBar">
+
+        <activity android:name=".EditDeviceActivity" />
+        <activity android:name=".AddNewDeviceActivity" />
         <activity
             android:name=".DevicesActivity"
-            android:label="@string/title_activity_devices"
+            android:label="@string/app_name"
             android:theme="@style/Theme.SmartQRLockApp.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

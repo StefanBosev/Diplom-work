@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "63708984559",
+    "project_id": "smart-qr-lock-app",
+    "storage_bucket": "smart-qr-lock-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:63708984559:android:b733dacf2a35609ccc171a",
+        "android_client_info": {
+          "package_name": "org.elsys.smartqrlockapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "63708984559-j03o4id6gp4tqrje9qith915m9sbqggq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD_mnsrxuEyS10v9ggRf6Nz7FfcPnsrAGE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "63708984559-j03o4id6gp4tqrje9qith915m9sbqggq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

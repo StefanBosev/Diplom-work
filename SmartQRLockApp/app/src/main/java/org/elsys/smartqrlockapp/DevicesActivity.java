@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -90,8 +91,13 @@ public class DevicesActivity extends AppCompatActivity {
         newDevice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Snackbar.make(v, "Open details about the device", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent editDeviceIntent = new Intent(v.getContext(), EditDeviceActivity.class);
+                Bundle deviceData = new Bundle();
+
+                deviceData.putString("name", deviceName);
+
+                editDeviceIntent.putExtras(deviceData);
+                startActivity(editDeviceIntent);
             }
         });
 
