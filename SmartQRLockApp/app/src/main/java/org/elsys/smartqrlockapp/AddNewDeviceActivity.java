@@ -58,11 +58,10 @@ public class AddNewDeviceActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void addToDevicesList() {
+    private void addToDevicesList() {
         EditText deviceName = (EditText) findViewById(R.id.setDeviceName);
 
         JSONObject deviceData = new JSONObject();
-
         JSONObject accessList = new JSONObject();
 
         try {
@@ -83,8 +82,16 @@ public class AddNewDeviceActivity extends AppCompatActivity {
             directory.mkdir();
         }
 
-        File newDevice = new File(directory, deviceName.getText().toString().toLowerCase().replaceAll(" ", "-") + ".json");
-        Log.d("DEBUG", newDevice.getPath());
+        StringBuilder filename = new StringBuilder();
+        filename.append(deviceName.getText().toString().toLowerCase().replaceAll(" ", "-"));
+
+        while (ifNameExistsInDir(filename.toString(), directory.listFiles())) {
+            Log.d("DEBUG", "Filename '" + filename.toString() + "' already exists");
+            filename.append("-");
+        }
+
+        File newDevice = new File(directory, filename + ".json");
+        Log.d("DEBUG", newDevice.getName());
 
         boolean res = true;
         if (!newDevice.exists()) {
@@ -105,5 +112,15 @@ public class AddNewDeviceActivity extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private boolean ifNameExistsInDir(String fileName, File[] directory) {
+        for (File file : directory) {
+            if (file.getName().equals(fileName + ".json")) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

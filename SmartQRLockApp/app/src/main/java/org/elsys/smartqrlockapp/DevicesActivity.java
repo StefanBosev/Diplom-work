@@ -68,6 +68,8 @@ public class DevicesActivity extends AppCompatActivity {
         File directory = new File(this.getFilesDir() + File.separator + "demo-json-dir");
         File[] allDevices = directory.listFiles();
 
+
+//        Just for easier file management. DELETE BEFORE UPLOADING TO PROD
 //        if (allDevices != null) {
 //            for (File file : allDevices) {
 //                file.delete();
@@ -77,26 +79,7 @@ public class DevicesActivity extends AppCompatActivity {
         JSONObject cardDetails = null;
 
         for (File device : allDevices) {
-            StringBuilder data = new StringBuilder();
-
-            try {
-                BufferedReader bufReader = new BufferedReader(new FileReader(device));
-                String line;
-
-                while ((line = bufReader.readLine()) != null) {
-                    data.append(line);
-                    data.append('\n');
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-
-            try {
-                cardDetails = new JSONObject(data.toString());
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+            cardDetails = readFile(device);
 
             if (cardDetails != null) {
                 visualiseDeviceCard(cardDetails);
@@ -164,5 +147,31 @@ public class DevicesActivity extends AppCompatActivity {
         newDevice.addView(text);
 
         devicesList.addView(newDevice);
+    }
+
+    private JSONObject readFile(File device) {
+        StringBuilder data = new StringBuilder();
+        JSONObject cardDetails = null;
+
+        try {
+            BufferedReader bufReader = new BufferedReader(new FileReader(device));
+            String line;
+
+            while ((line = bufReader.readLine()) != null) {
+                data.append(line);
+                data.append('\n');
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+        try {
+            cardDetails = new JSONObject(data.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return cardDetails;
     }
 }
