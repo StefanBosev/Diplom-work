@@ -82,7 +82,7 @@ public class DevicesActivity extends AppCompatActivity {
             cardDetails = readFile(device);
 
             if (cardDetails != null) {
-                visualiseDeviceCard(cardDetails);
+                visualiseDeviceCard(cardDetails, device.getPath());
             }
 
         }
@@ -104,7 +104,7 @@ public class DevicesActivity extends AppCompatActivity {
 
 
 
-    public void visualiseDeviceCard(JSONObject cardInfo) {
+    public void visualiseDeviceCard(JSONObject cardInfo, String filePath) {
         CardView newDevice = new CardView(getApplicationContext());
 
         newDevice.setLayoutParams(DevicesActivity.devicesLayout);
@@ -122,6 +122,7 @@ public class DevicesActivity extends AppCompatActivity {
                 Bundle deviceData = new Bundle();
 
                 deviceData.putString("name", cardInfo.toString());
+                deviceData.putString("file-path", filePath);
 
                 editDeviceIntent.putExtras(deviceData);
                 startActivity(editDeviceIntent);

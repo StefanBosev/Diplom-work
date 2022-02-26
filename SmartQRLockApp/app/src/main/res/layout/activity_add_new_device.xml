@@ -28,7 +28,7 @@
         android:layout_marginTop="50dp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="@string/enter_device_name_text"
+        android:hint="@string/enter_device_name_text"
         android:textColor="@color/black"
         android:textColorHint="@color/light_grey"
         app:layout_constraintStart_toStartOf="parent"
