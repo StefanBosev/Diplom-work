@@ -21,6 +21,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import org.elsys.smartqrlockapp.factories.FileManager;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -36,17 +37,27 @@ import java.nio.Buffer;
 
 public class AddNewDeviceActivity extends AppCompatActivity {
 
+    private final String devicesDir = "demo-json-dir";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_add_new_device);
-        Button but = (Button) findViewById(R.id.button);
-        but.setOnClickListener(new View.OnClickListener() {
+        Button submit = (Button) findViewById(R.id.submit);
+        submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 addToDevicesList();
                 returnToMainPage();
+            }
+        });
+
+        Button addAccess = (Button) findViewById(R.id.addAccessEntry);
+        addAccess.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addNewAccessEntry();
             }
         });
     }
@@ -60,23 +71,25 @@ public class AddNewDeviceActivity extends AppCompatActivity {
 
     private void addToDevicesList() {
         EditText deviceName = (EditText) findViewById(R.id.setDeviceName);
+        EditText devicePlacement = (EditText) findViewById(R.id.setDevicePlacement);
 
         JSONObject deviceData = new JSONObject();
         JSONObject accessList = new JSONObject();
 
         try {
+
             accessList.put("gosho", "asdfg");
             accessList.put("misho", "qwertyui");
             accessList.put("stoyo", "1234mn56m7,8.,m21");
 
             deviceData.put("name", deviceName.getText().toString());
-            deviceData.put("place", "kitchen");
+            deviceData.put("place", devicePlacement.getText().toString());
             deviceData.put("access-list", accessList);
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
-        File directory = new File(this.getFilesDir() + File.separator + "demo-json-dir");
+        File directory = new File(this.getFilesDir() + File.separator + devicesDir);
 
         if (!directory.exists()) {
             directory.mkdir();
@@ -85,42 +98,28 @@ public class AddNewDeviceActivity extends AppCompatActivity {
         StringBuilder filename = new StringBuilder();
         filename.append(deviceName.getText().toString().toLowerCase().replaceAll(" ", "-"));
 
-        while (ifNameExistsInDir(filename.toString(), directory.listFiles())) {
-            Log.d("DEBUG", "Filename '" + filename.toString() + "' already exists");
-            filename.append("-");
-        }
+        FileManager fileManager = FileManager.getInstance();
 
-        File newDevice = new File(directory, filename + ".json");
-        Log.d("DEBUG", newDevice.getName());
-
-        boolean res = true;
-        if (!newDevice.exists()) {
-            try {
-                res = newDevice.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        try {
-            FileOutputStream fos = new FileOutputStream(newDevice);
-            OutputStreamWriter outStreamWriter = new OutputStreamWriter(fos);
-
-            outStreamWriter.write(deviceData.toString());
-            outStreamWriter.close();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        fileManager.createDeviceFile(directory, filename,  deviceData);
     }
 
-    private boolean ifNameExistsInDir(String fileName, File[] directory) {
-        for (File file : directory) {
-            if (file.getName().equals(fileName + ".json")) {
-                return true;
-            }
-        }
+    private void addNewAccessEntry() {
+        EditText newName = new EditText(getApplicationContext());
+        EditText newPass = new EditText(getApplicationContext());
 
-        return false;
+        newName.setHint("Device name");
+        newPass.setHint("Password");
+
+        LinearLayout newEntry = new LinearLayout(getApplicationContext());
+
+        newEntry.addView(newName);
+        newEntry.addView(newPass);
+
+        LinearLayout list = findViewById(R.id.addToListView);
+        list.addView(newEntry);
+
+        Log.d("DEBUG", "added new device");
+
     }
 }
+

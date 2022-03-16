@@ -12,6 +12,7 @@
     <string name="add_new_device">New device creation</string>
 
     <string name="new_device_heading">Enter data for your new device</string>
-    <string name="enter_device_name_text">Device name</string>
+    <string name="enter_device_name_hint">Device name</string>
+    <string name="enter_device_placement_hint">Device placement</string>
     <string name="title_activity_edit_device">EditDeviceActivity</string>
 </resources>

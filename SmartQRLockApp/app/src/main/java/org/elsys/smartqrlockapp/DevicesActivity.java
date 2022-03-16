@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 
+import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -18,6 +19,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import org.elsys.smartqrlockapp.factories.CardViewFactory;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -102,19 +104,12 @@ public class DevicesActivity extends AppCompatActivity {
         startActivity(i);
     }
 
-
-
     public void visualiseDeviceCard(JSONObject cardInfo, String filePath) {
-        CardView newDevice = new CardView(getApplicationContext());
+        CardViewFactory cardViewFactory = CardViewFactory.getInstance();
+
+        CardView newDevice = cardViewFactory.getCard(cardInfo, filePath, getApplicationContext(), activityBody);
 
         newDevice.setLayoutParams(DevicesActivity.devicesLayout);
-        newDevice.setPadding(25, 25, 25, 25);
-        newDevice.setCardBackgroundColor(0xFF84C984);
-        newDevice.setMaxCardElevation(60);
-        newDevice.setRadius(25);
-        newDevice.setMinimumHeight(60);
-        newDevice.setMinimumWidth(activityBody.getWidth() - 50);
-        newDevice.setClickable(true);
         newDevice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -128,24 +123,6 @@ public class DevicesActivity extends AppCompatActivity {
                 startActivity(editDeviceIntent);
             }
         });
-
-        TextView text = new TextView(getApplicationContext());
-        text.setLayoutParams(DevicesActivity.devicesLayout);
-
-        String deviceName = "";
-        try {
-            deviceName = cardInfo.getString("name");
-        } catch (JSONException e) {
-            deviceName = "Error extracting name from json";
-            e.printStackTrace();
-        }
-
-        text.setText(deviceName);
-        text.setTextColor(Color.WHITE);
-        text.setPadding(25, 25, 25, 25);
-        text.setGravity(Gravity.CENTER);
-
-        newDevice.addView(text);
 
         devicesList.addView(newDevice);
     }
