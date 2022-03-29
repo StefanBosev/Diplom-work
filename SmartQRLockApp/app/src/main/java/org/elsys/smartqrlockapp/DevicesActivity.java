@@ -20,6 +20,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.elsys.smartqrlockapp.factories.CardViewFactory;
+import org.elsys.smartqrlockapp.values.Colors;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -61,7 +62,7 @@ public class DevicesActivity extends AppCompatActivity {
 
         // Setting a value and background color for main body of the activity
         activityBody = (CoordinatorLayout) findViewById(R.id.devicesActivityBody);
-        activityBody.setBackgroundColor(Color.WHITE);
+        activityBody.setBackgroundColor(Colors.APP_BACKGROUND);
 
         // Setting a value for the view list of the device cards
         devicesList = (LinearLayout) findViewById(R.id.devicesList);

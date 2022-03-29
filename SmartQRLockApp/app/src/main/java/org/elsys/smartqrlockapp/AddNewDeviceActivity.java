@@ -9,12 +9,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -72,15 +74,28 @@ public class AddNewDeviceActivity extends AppCompatActivity {
     private void addToDevicesList() {
         EditText deviceName = (EditText) findViewById(R.id.setDeviceName);
         EditText devicePlacement = (EditText) findViewById(R.id.setDevicePlacement);
+        LinearLayout accessListContainer = findViewById(R.id.addToListView);
 
         JSONObject deviceData = new JSONObject();
         JSONObject accessList = new JSONObject();
 
         try {
 
-            accessList.put("gosho", "asdfg");
-            accessList.put("misho", "qwertyui");
-            accessList.put("stoyo", "1234mn56m7,8.,m21");
+           int entriesNum = accessListContainer.getChildCount();
+
+           for (int i = 0; i < entriesNum; ++i) {
+               CardView child = (CardView) accessListContainer.getChildAt(i);
+               LinearLayout childLayout = (LinearLayout) child.getChildAt(0);
+               TextView name = (TextView) childLayout.getChildAt(0);
+               TextView password = (TextView) childLayout.getChildAt(1);
+               TextView endDate = (TextView) childLayout.getChildAt(2);
+
+               JSONObject personalData = new JSONObject();
+               personalData.put("password", password.getText().toString());
+               personalData.put("end-date", endDate.getText().toString());
+
+               accessList.put(name.getText().toString(), personalData);
+           }
 
             deviceData.put("name", deviceName.getText().toString());
             deviceData.put("place", devicePlacement.getText().toString());
@@ -106,16 +121,32 @@ public class AddNewDeviceActivity extends AppCompatActivity {
     private void addNewAccessEntry() {
         EditText newName = new EditText(getApplicationContext());
         EditText newPass = new EditText(getApplicationContext());
+        EditText newDate = new EditText(getApplicationContext());
 
-        newName.setHint("Device name");
+        newName.setHint("Name");
         newPass.setHint("Password");
+        newPass.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        newDate.setHint("date");
+        newDate.setInputType(InputType.TYPE_CLASS_DATETIME);
 
-        LinearLayout newEntry = new LinearLayout(getApplicationContext());
+        CardView newEntry = new CardView(getApplicationContext());
+        LinearLayout cardLayout = new LinearLayout(getApplicationContext());
 
-        newEntry.addView(newName);
-        newEntry.addView(newPass);
+        cardLayout.setOrientation(LinearLayout.VERTICAL);
+        cardLayout.addView(newName);
+        cardLayout.addView(newPass);
+        cardLayout.addView(newDate);
+
+
+        newEntry.addView(cardLayout);
 
         LinearLayout list = findViewById(R.id.addToListView);
+
+        newEntry.setMinimumWidth(list.getWidth());;
+        newEntry.setCardBackgroundColor(0xFF9BF3F0);
+        newEntry.setRadius(25);
+        newEntry.setPadding(10, 10, 10, 25);
+
         list.addView(newEntry);
 
         Log.d("DEBUG", "added new device");

@@ -12,11 +12,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.SmartQRLockApp.NoActionBar">
-
+        <activity android:name=".ShowQRActivity"></activity>
         <activity android:name=".EditDeviceActivity" />
-        <activity android:name=".AddNewDeviceActivity"
-            android:windowSoftInputMode="adjustPan"/>
-
+        <activity
+            android:name=".AddNewDeviceActivity"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".DevicesActivity"
             android:label="@string/app_name"

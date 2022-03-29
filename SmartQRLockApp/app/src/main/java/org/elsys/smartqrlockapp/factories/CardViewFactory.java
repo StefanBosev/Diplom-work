@@ -18,6 +18,7 @@ import org.elsys.smartqrlockapp.DevicesActivity;
 import org.elsys.smartqrlockapp.EditDeviceActivity;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.elsys.smartqrlockapp.values.Colors;
 
 public class CardViewFactory {
     private static CardViewFactory cardViewFactory = null;
@@ -50,7 +51,7 @@ public class CardViewFactory {
 
         newDevice.setPadding(25, 25, 25, 25);
         newDevice.setMinimumWidth(activityBody.getWidth() - 50);
-        newDevice.setCardBackgroundColor(0xFF84C984);
+        newDevice.setCardBackgroundColor(Colors.CARD_BACKGROUND);
         newDevice.setMaxCardElevation(60);
         newDevice.setRadius(25);
         newDevice.setMinimumHeight(60);
@@ -60,7 +61,6 @@ public class CardViewFactory {
         textLayout.setLayoutParams(this.textLayoutParams);
         textLayout.setOrientation(LinearLayout.VERTICAL);
         textLayout.setPadding(16, 16, 16, 16);
-
 
         TextView heading = new TextView(applicationContext);
         TextView secondary = new TextView(applicationContext);
@@ -76,12 +76,12 @@ public class CardViewFactory {
         }
 
         heading.setText(deviceName);
-        heading.setTextColor(Color.WHITE);
+        heading.setTextColor(Colors.CARD_HEADING_TEXT);
         heading.setTextSize(20);
         heading.setGravity(Gravity.LEFT);
 
         secondary.setText(devicePlace);
-        secondary.setTextColor(Color.GRAY);
+        secondary.setTextColor(Colors.CARD_SECONDARY_TEXT);
         secondary.setTextSize(15);
         secondary.setGravity(Gravity.LEFT);
 
