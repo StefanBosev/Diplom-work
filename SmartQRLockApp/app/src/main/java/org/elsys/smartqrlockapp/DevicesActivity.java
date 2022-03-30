@@ -15,6 +15,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import org.elsys.smartqrlockapp.factories.FileManager;
 import org.elsys.smartqrlockapp.factories.MainCardFactory;
 import org.elsys.smartqrlockapp.values.Colors;
 import org.json.JSONException;
@@ -64,16 +65,8 @@ public class DevicesActivity extends AppCompatActivity {
         devicesList = (LinearLayout) findViewById(R.id.devicesList);
 
         // Visualising all available devices on every initialization of activity
-        File directory = new File(this.getFilesDir() + File.separator + "demo-json-dir");
+        File directory = new File(this.getFilesDir() + File.separator + FileManager.devicesDir);
         File[] allDevices = directory.listFiles();
-
-
-//        Just for easier file management. DELETE BEFORE UPLOADING TO PROD
-//        if (allDevices != null) {
-//            for (File file : allDevices) {
-//                file.delete();
-//            }
-//        }
 
         JSONObject cardDetails = null;
 
@@ -128,7 +121,7 @@ public class DevicesActivity extends AppCompatActivity {
                 AlertDialog.Builder builder = new AlertDialog.Builder(DevicesActivity.this);
 
                 builder.setCancelable(true);
-                builder.setTitle("Delete file?");
+                builder.setTitle("Delete file");
                 builder.setMessage("Are you sure you want to delete this file?");
                 builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override

@@ -89,7 +89,7 @@ public class AddNewDeviceActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        File directory = new File(this.getFilesDir() + File.separator + devicesDir);
+        File directory = new File(this.getFilesDir() + File.separator + FileManager.devicesDir);
 
         if (!directory.exists()) {
             directory.mkdir();
@@ -114,7 +114,7 @@ public class AddNewDeviceActivity extends AppCompatActivity {
                 AlertDialog.Builder builder = new AlertDialog.Builder(AddNewDeviceActivity.this);
 
                 builder.setCancelable(true);
-                builder.setTitle("Delete entry?");
+                builder.setTitle("Delete entry");
                 builder.setMessage("Are you sure you want to delete this entry?");
                 builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override

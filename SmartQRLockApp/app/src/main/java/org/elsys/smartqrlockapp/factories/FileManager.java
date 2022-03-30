@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 
 public class FileManager {
+    public static final String devicesDir = "devices_dir";
     private static FileManager fileManager = null;
 
     public static FileManager getInstance() {
