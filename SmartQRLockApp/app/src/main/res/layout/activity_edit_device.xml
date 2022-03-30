@@ -7,45 +7,107 @@
     android:layout_height="match_parent"
     tools:context=".EditDeviceActivity">
 
+    <Button
+        android:id="@+id/addAccessEntryEdit"
+        android:layout_width="44dp"
+        android:layout_height="51dp"
+        android:layout_marginStart="332dp"
+        android:layout_marginTop="8dp"
+        android:backgroundTint="@color/theme_orange"
+        android:text="+"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/setDevicePlacementEdit" />
+
     <TextView
-        android:id="@+id/deviceNameInEdit"
+        android:id="@+id/textView5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:text="TextView"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="32dp"
+        android:text="Access List"
+        android:textColor="@color/black"
+        android:textSize="17sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/setDevicePlacementEdit" />
 
-    <ImageView
-        android:id="@+id/qrCodeView"
-        android:layout_width="400dp"
-        android:layout_height="400dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+    <EditText
+        android:id="@+id/setDevicePlacementEdit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="10dp"
+        android:ems="10"
+        android:hint="@string/enter_device_placement_hint"
+        android:inputType="textPersonName"
+        android:textColor="@color/black"
+
+        android:textColorHint="@color/light_grey"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@color/white" />
+        app:layout_constraintTop_toBottomOf="@+id/setDeviceNameEdit" />
 
     <Button
         android:id="@+id/generateQRButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="25dp"
+        android:layout_marginBottom="4dp"
         android:text="Generate QR"
-        app:layout_constraintBottom_toTopOf="@+id/shareQR"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <Button
-        android:id="@+id/shareQR"
+    <TextView
+        android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="30dp"
-        android:text="Share"
+        android:layout_marginTop="24dp"
+        android:text="@string/edit_device_heading"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/setDeviceNameEdit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="50dp"
+        android:ems="10"
+        android:hint="@string/enter_device_name_hint"
+        android:inputType="textPersonName"
+        android:textColor="@color/black"
+        android:textColorHint="@color/light_grey"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView4" />
+
+    <Button
+        android:id="@+id/saveEdit"
+        android:layout_width="353dp"
+        android:layout_height="52dp"
+        android:layout_marginBottom="52dp"
+        android:text="Save"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <ScrollView
+        android:layout_width="350dp"
+        android:layout_height="341dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        app:layout_constraintBottom_toTopOf="@+id/saveEdit"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/addAccessEntryEdit">
+
+        <LinearLayout
+            android:id="@+id/accessListScrollViewEdit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+    </ScrollView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,12 +1,15 @@
 package org.elsys.smartqrlockapp;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.FileProvider;
 
 import androidmads.library.qrgenearator.QRGContents;
 import androidmads.library.qrgenearator.QRGEncoder;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -18,7 +21,10 @@ import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.zxing.BarcodeFormat;
@@ -26,20 +32,25 @@ import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 
+import org.elsys.smartqrlockapp.factories.AccessCardFactory;
+import org.elsys.smartqrlockapp.factories.FileManager;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Iterator;
 
 public class EditDeviceActivity extends AppCompatActivity {
 
-    Bundle deviceData;
-    TextView view;
-    ConstraintLayout activityBody;
-    ImageView qrCodeView;
-    Bitmap map;
+    private Bundle deviceData;
+    private ConstraintLayout activityBody;
+    private JSONObject data;
+    private TextView deviceName;
+    private TextView devicePlacement;
+    private LinearLayout accessList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,92 +58,210 @@ public class EditDeviceActivity extends AppCompatActivity {
         setContentView(R.layout.activity_edit_device);
 
         deviceData = getIntent().getExtras();
-        view = findViewById(R.id.deviceNameInEdit);
         activityBody = findViewById(R.id.editDeviceActivityBody);
-        qrCodeView = findViewById(R.id.qrCodeView);
+        deviceName = findViewById(R.id.setDeviceNameEdit);
+        devicePlacement = findViewById(R.id.setDevicePlacementEdit);
+        accessList = findViewById(R.id.accessListScrollViewEdit);
+
+        deviceName.setHint("Device name");
+        devicePlacement.setHint("Placement");
 
         activityBody.setBackgroundColor(Color.WHITE);
 
-        view.setText(deviceData.get("name").toString());
-        view.setTextColor(Color.BLACK);
-
-        Button generateQRButton = findViewById(R.id.generateQRButton);
-        generateQRButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                map = generateQRMap(view.getText().toString());
-                qrCodeView.setImageBitmap(map);
-            }
-        });
-
-        Button shareQR = findViewById(R.id.shareQR);
-        shareQR.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                BitmapDrawable drawable = (BitmapDrawable) qrCodeView.getDrawable();
-                Bitmap map = drawable.getBitmap();
-
-                Uri uri = generateUri(map);
-
-                if (uri != null) {
-                    shareImage(uri);
-                }
-            }
-        });
-    }
-
-    private Bitmap generateQRMap(String content) {
-        WindowManager manager = (WindowManager) getSystemService(WINDOW_SERVICE);
-
-        Display display = manager.getDefaultDisplay();
-
-        Point p = new Point();
-        display.getSize(p);
-
-        int width = p.x;
-        int height = p.y;
-
-        int dimen = Math.min(width, height);
-        dimen = dimen * 3 / 4;
-
-        QRGEncoder qrgEncoder = new QRGEncoder(content, null, QRGContents.Type.TEXT, dimen);
-
-        Bitmap newMap = Bitmap.createBitmap(400, 400, Bitmap.Config.RGB_565);
-
         try {
-            newMap = qrgEncoder.encodeAsBitmap();
-        } catch (WriterException e) {
+            data = new JSONObject(deviceData.getString("data"));
+            deviceName.setText(data.getString("name"));
+            devicePlacement.setText(data.getString("place"));
+
+            System.out.println(deviceData.toString());
+
+            JSONObject list = new JSONObject(data.getString("access-list"));
+
+            Iterator<String> listIterator = list.keys();
+
+            while (listIterator.hasNext()) {
+                String personName = listIterator.next();
+                JSONObject personalData = list.getJSONObject(personName);
+                System.out.println(personName);
+
+                CardView newCard = AccessCardFactory.getInstance().getCard(
+                                                                        getApplicationContext(),
+                                                                        accessList,
+                                                                        personName,
+                                                                        personalData.get("password").toString(),
+                                                                        personalData.get("end-date").toString());
+
+                newCard.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(EditDeviceActivity.this);
+
+                        builder.setCancelable(true);
+                        builder.setTitle("Delete entry?");
+                        builder.setMessage("Are you sure you want to delete this entry?");
+                        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                accessList.removeView(newCard);
+                            }
+                        });
+
+                        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+
+                        builder.create().show();
+
+
+                        return true;
+                    }
+                });
+
+                newCard.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        JSONObject data = new JSONObject();
+
+                        try {
+                            data.put(personName, personalData);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        showQR(data.toString());
+                    }
+                });
+
+                accessList.addView(newCard);
+            }
+
+        } catch (JSONException e) {
             e.printStackTrace();
         }
 
-        return newMap;
+        Button addAccessEntry = findViewById(R.id.addAccessEntryEdit);
+        addAccessEntry.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CardView newCard = AccessCardFactory.getInstance().getCard(getApplicationContext(), accessList, null, null, null);
+                newCard.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(EditDeviceActivity.this);
+
+                        builder.setCancelable(true);
+                        builder.setTitle("Delete entry?");
+                        builder.setMessage("Are you sure you want to delete this entry?");
+                        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                accessList.removeView(newCard);
+                            }
+                        });
+
+                        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+
+                        builder.create().show();
+
+
+                        return true;
+                    }
+                });
+
+                newCard.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        JSONObject data = new JSONObject();
+                        JSONObject personalData = new JSONObject();
+                        TextView name = (TextView) newCard.getChildAt(1);
+                        TextView password = (TextView) newCard.getChildAt(2);
+                        TextView endDate = (TextView) newCard.getChildAt(3);
+
+                        try {
+                            personalData.put("password", password.getText().toString());
+                            personalData.put("end-date", endDate.getText().toString());
+                            data.put(name.getText().toString(), personalData);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        showQR(data.toString());
+                    }
+                });
+                accessList.addView(newCard);
+            }
+        });
+
+        Button saveEdit = findViewById(R.id.saveEdit);
+        saveEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                saveFile(deviceData.getString("file-path"));
+                returnToMainPage();
+            }
+        });
+
     }
 
-    private Uri generateUri(Bitmap map) {
-        File directory = new File(getCacheDir(), "images");
+    public void returnToMainPage() {
 
-        directory.mkdirs();
-        File newImage = new File(directory, "qr-for-share.png");
+        Intent intent = new Intent(this, DevicesActivity.class);
+
+        startActivity(intent);
+    }
+
+    private void showQR(String textToEncode) {
+        Intent intent = new Intent(this, ShowQRActivity.class);
+
+        intent.putExtra("data", textToEncode);
+
+        startActivity(intent);
+    }
+
+    private void saveFile(String filepath) {
+        JSONObject newData = new JSONObject();
+        JSONObject newAccessList = new JSONObject();
 
         try {
-            FileOutputStream fos = new FileOutputStream(newImage);
-            map.compress(Bitmap.CompressFormat.PNG, 90, fos);
-            fos.flush();
-            fos.close();
-        } catch (IOException e) {
+
+            int entriesNum = accessList.getChildCount();
+            System.out.println("child number: " + entriesNum);
+
+            for (int i = 0; i < entriesNum; ++i) {
+                CardView child = (CardView) accessList.getChildAt(i);
+                LinearLayout childLayout = (LinearLayout) child.getChildAt(0);
+                TextView name = (TextView) childLayout.getChildAt(1);
+                TextView password = (TextView) childLayout.getChildAt(2);
+                TextView endDate = (TextView) childLayout.getChildAt(3);
+
+                JSONObject personalData = new JSONObject();
+                personalData.put("password", password.getText().toString());
+                personalData.put("end-date", endDate.getText().toString());
+
+                newAccessList.put(name.getText().toString(), personalData);
+            }
+
+            newData.put("name", deviceName.getText().toString());
+            newData.put("place", devicePlacement.getText().toString());
+            newData.put("access-list", newAccessList);
+        } catch (JSONException e) {
             e.printStackTrace();
         }
 
-        return FileProvider.getUriForFile(getApplicationContext(), "com.anni.shareimage.fileprovider", newImage);
+        File file = new File(filepath);
+
+        FileManager fileManager = FileManager.getInstance();
+
+        fileManager.overwriteFile(file, newData.toString());
     }
 
-    private void shareImage(Uri uri) {
-        Intent shareIntent = new Intent(Intent.ACTION_SEND);
 
-        shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
-        shareIntent.putExtra(Intent.EXTRA_SUBJECT, "Sending QR code");
-        shareIntent.setType("image/png");
-
-        startActivity(Intent.createChooser(shareIntent, "Share via"));
-    }
 }

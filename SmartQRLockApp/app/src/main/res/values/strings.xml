@@ -1,17 +1,13 @@
 <resources>
     <string name="app_name">SmartQRLockApp</string>
     <string name="title_activity_devices">DevicesActivity</string>
-    <!-- Strings used for fragments for navigation -->
-    <string name="first_fragment_label">First Fragment</string>
-    <string name="second_fragment_label">Second Fragment</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
 
-    <string name="hello_first_fragment">Hello first fragment</string>
-    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <string name="add_new_device">New device creation</string>
 
     <string name="new_device_heading">Enter data for your new device</string>
+    <string name="edit_device_heading">Edit data for your device</string>
     <string name="enter_device_name_hint">Device name</string>
     <string name="enter_device_placement_hint">Device placement</string>
     <string name="title_activity_edit_device">EditDeviceActivity</string>

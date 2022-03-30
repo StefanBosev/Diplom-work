@@ -6,6 +6,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 
@@ -60,6 +61,7 @@ public class FileManager {
 
             outStreamWriter.write(deviceData.toString());
             outStreamWriter.close();
+            fos.close();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -69,5 +71,17 @@ public class FileManager {
     }
 
 
+    public void overwriteFile(File file, String content) {
+        try {
+            FileOutputStream fos = new FileOutputStream(file, false);
+            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fos);
 
+            outputStreamWriter.write(content);
+            outputStreamWriter.close();
+            fos.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
 }

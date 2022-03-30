@@ -1,41 +1,26 @@
 package org.elsys.smartqrlockapp;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
-import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-
+import org.elsys.smartqrlockapp.factories.AccessCardFactory;
 import org.elsys.smartqrlockapp.factories.FileManager;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.nio.Buffer;
 
 public class AddNewDeviceActivity extends AppCompatActivity {
 
@@ -74,7 +59,7 @@ public class AddNewDeviceActivity extends AppCompatActivity {
     private void addToDevicesList() {
         EditText deviceName = (EditText) findViewById(R.id.setDeviceName);
         EditText devicePlacement = (EditText) findViewById(R.id.setDevicePlacement);
-        LinearLayout accessListContainer = findViewById(R.id.addToListView);
+        LinearLayout accessListContainer = findViewById(R.id.addToListViewEdit);
 
         JSONObject deviceData = new JSONObject();
         JSONObject accessList = new JSONObject();
@@ -86,9 +71,9 @@ public class AddNewDeviceActivity extends AppCompatActivity {
            for (int i = 0; i < entriesNum; ++i) {
                CardView child = (CardView) accessListContainer.getChildAt(i);
                LinearLayout childLayout = (LinearLayout) child.getChildAt(0);
-               TextView name = (TextView) childLayout.getChildAt(0);
-               TextView password = (TextView) childLayout.getChildAt(1);
-               TextView endDate = (TextView) childLayout.getChildAt(2);
+               TextView name = (TextView) childLayout.getChildAt(1);
+               TextView password = (TextView) childLayout.getChildAt(2);
+               TextView endDate = (TextView) childLayout.getChildAt(3);
 
                JSONObject personalData = new JSONObject();
                personalData.put("password", password.getText().toString());
@@ -119,37 +104,40 @@ public class AddNewDeviceActivity extends AppCompatActivity {
     }
 
     private void addNewAccessEntry() {
-        EditText newName = new EditText(getApplicationContext());
-        EditText newPass = new EditText(getApplicationContext());
-        EditText newDate = new EditText(getApplicationContext());
+        LinearLayout list = findViewById(R.id.addToListViewEdit);
+        CardView newEntry = AccessCardFactory.getInstance().getCard(getApplicationContext(), list, null, null, null);
+        newEntry.setClickable(true);
 
-        newName.setHint("Name");
-        newPass.setHint("Password");
-        newPass.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
-        newDate.setHint("date");
-        newDate.setInputType(InputType.TYPE_CLASS_DATETIME);
+        newEntry.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(AddNewDeviceActivity.this);
 
-        CardView newEntry = new CardView(getApplicationContext());
-        LinearLayout cardLayout = new LinearLayout(getApplicationContext());
+                builder.setCancelable(true);
+                builder.setTitle("Delete entry?");
+                builder.setMessage("Are you sure you want to delete this entry?");
+                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        list.removeView(newEntry);
+                    }
+                });
 
-        cardLayout.setOrientation(LinearLayout.VERTICAL);
-        cardLayout.addView(newName);
-        cardLayout.addView(newPass);
-        cardLayout.addView(newDate);
+                builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+
+                builder.create().show();
 
 
-        newEntry.addView(cardLayout);
-
-        LinearLayout list = findViewById(R.id.addToListView);
-
-        newEntry.setMinimumWidth(list.getWidth());;
-        newEntry.setCardBackgroundColor(0xFF9BF3F0);
-        newEntry.setRadius(25);
-        newEntry.setPadding(10, 10, 10, 25);
+                return true;
+            }
+        });
 
         list.addView(newEntry);
-
-        Log.d("DEBUG", "added new device");
 
     }
 }

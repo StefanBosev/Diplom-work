@@ -1,25 +1,21 @@
 package org.elsys.smartqrlockapp;
 
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 
-import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
-import android.util.JsonReader;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
-import org.elsys.smartqrlockapp.factories.CardViewFactory;
+import org.elsys.smartqrlockapp.factories.MainCardFactory;
 import org.elsys.smartqrlockapp.values.Colors;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -106,9 +102,9 @@ public class DevicesActivity extends AppCompatActivity {
     }
 
     public void visualiseDeviceCard(JSONObject cardInfo, String filePath) {
-        CardViewFactory cardViewFactory = CardViewFactory.getInstance();
+        MainCardFactory mainCardFactory = MainCardFactory.getInstance();
 
-        CardView newDevice = cardViewFactory.getCard(cardInfo, filePath, getApplicationContext(), activityBody);
+        CardView newDevice = mainCardFactory.getCard(cardInfo, getApplicationContext(), activityBody);
 
         newDevice.setLayoutParams(DevicesActivity.devicesLayout);
         newDevice.setOnClickListener(new View.OnClickListener() {
@@ -117,11 +113,43 @@ public class DevicesActivity extends AppCompatActivity {
                 Intent editDeviceIntent = new Intent(v.getContext(), EditDeviceActivity.class);
                 Bundle deviceData = new Bundle();
 
-                deviceData.putString("name", cardInfo.toString());
+                deviceData.putString("data", cardInfo.toString());
                 deviceData.putString("file-path", filePath);
 
                 editDeviceIntent.putExtras(deviceData);
                 startActivity(editDeviceIntent);
+            }
+        });
+
+        newDevice.setOnLongClickListener(new View.OnLongClickListener() {
+
+            @Override
+            public boolean onLongClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(DevicesActivity.this);
+
+                builder.setCancelable(true);
+                builder.setTitle("Delete file?");
+                builder.setMessage("Are you sure you want to delete this file?");
+                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        File file = new File(filePath);
+                        file.delete();
+                        devicesList.removeView(newDevice);
+                    }
+                });
+
+                builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+
+                builder.create().show();
+
+
+                return true;
             }
         });
 

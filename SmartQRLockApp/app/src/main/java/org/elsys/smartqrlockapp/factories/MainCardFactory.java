@@ -1,40 +1,32 @@
 package org.elsys.smartqrlockapp.factories;
 
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.Color;
-import android.os.Bundle;
-import android.text.Layout;
 import android.view.Gravity;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.cardview.widget.CardView;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
-import org.elsys.smartqrlockapp.DevicesActivity;
-import org.elsys.smartqrlockapp.EditDeviceActivity;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.elsys.smartqrlockapp.values.Colors;
 
-public class CardViewFactory {
-    private static CardViewFactory cardViewFactory = null;
+public class MainCardFactory {
+    private static MainCardFactory mainCardFactory = null;
 
-    public static CardViewFactory getInstance() {
-        if (cardViewFactory == null) {
-            cardViewFactory = new CardViewFactory();
+    public static MainCardFactory getInstance() {
+        if (mainCardFactory == null) {
+            mainCardFactory = new MainCardFactory();
         }
 
-        return cardViewFactory;
+        return mainCardFactory;
     }
 
     LinearLayout.LayoutParams cardLayoutParams;
     LinearLayout.LayoutParams textLayoutParams;
 
-    private CardViewFactory() {
+    private MainCardFactory() {
         this.cardLayoutParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
@@ -46,7 +38,7 @@ public class CardViewFactory {
         );
     }
 
-    public CardView getCard(JSONObject cardInfo, String filePath, Context applicationContext, ViewGroup activityBody) {
+    public CardView getCard(JSONObject cardInfo, Context applicationContext, ViewGroup activityBody) {
         CardView newDevice = new CardView(applicationContext);
 
         newDevice.setPadding(25, 25, 25, 25);
