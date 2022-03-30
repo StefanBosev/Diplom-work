@@ -68,20 +68,23 @@
         android:layout_height="51dp"
         android:layout_marginStart="332dp"
         android:layout_marginTop="8dp"
-        android:backgroundTint="@color/theme_orange"
+        android:backgroundTint="@color/teal_700"
+        android:textColor="@color/white"
         android:text="+"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/setDevicePlacement" />
 
     <Button
         android:id="@+id/submit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
-        android:backgroundTint="@color/theme_orange"
+        android:layout_width="248dp"
+        android:layout_height="49dp"
+        android:layout_marginBottom="16dp"
+        android:backgroundTint="@color/teal_700"
         android:text="Submit"
+        android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.556"
         app:layout_constraintStart_toStartOf="parent" />
 
     <ScrollView

@@ -38,9 +38,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.nio.CharBuffer;
 import java.util.Iterator;
 
 public class EditDeviceActivity extends AppCompatActivity {
@@ -209,6 +213,16 @@ public class EditDeviceActivity extends AppCompatActivity {
             }
         });
 
+        Button sendDeviceFile = findViewById(R.id.sendDeviceFile);
+        sendDeviceFile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                File fileToShare = new File(deviceData.getString("file-path"));
+                Uri uri = generateUri(fileToShare);
+                shareFile(uri);
+            }
+        });
+
     }
 
     public void returnToMainPage() {
@@ -261,6 +275,50 @@ public class EditDeviceActivity extends AppCompatActivity {
         FileManager fileManager = FileManager.getInstance();
 
         fileManager.overwriteFile(file, newData.toString());
+    }
+
+    private Uri generateUri(File fileToShare) {
+        File directory = new File(getCacheDir(), "file_share");
+
+        if (!directory.exists()) {
+            directory.mkdir();
+        }
+
+        File fileCopy = new File(directory, "device_data.json");
+
+        try {
+            FileInputStream fis = new FileInputStream(fileToShare);
+            InputStreamReader inStreamReader = new InputStreamReader(fis);
+
+            FileOutputStream fos = new FileOutputStream(fileCopy);
+            OutputStreamWriter outStreamWriter = new OutputStreamWriter(fos);
+
+            int res;
+            while ((res = inStreamReader.read()) >= 0) {
+                outStreamWriter.write(res);
+            }
+
+            inStreamReader.close();
+            fis.close();
+            outStreamWriter.close();
+            fos.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+        return FileProvider.getUriForFile(getApplicationContext(), "com.anni.shareimage.fileprovider", fileCopy);
+    }
+
+    private void shareFile(Uri uri) {
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+
+        shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
+        shareIntent.putExtra(Intent.EXTRA_SUBJECT, "Sending Device Data");
+        shareIntent.setType("application/json");
+
+        startActivity(Intent.createChooser(shareIntent, "Share via"));
     }
 
 
