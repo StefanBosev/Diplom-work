@@ -66,6 +66,11 @@ public class DevicesActivity extends AppCompatActivity {
 
         // Visualising all available devices on every initialization of activity
         File directory = new File(this.getFilesDir() + File.separator + FileManager.devicesDir);
+
+        if (!directory.exists()) {
+            directory.mkdirs();
+        }
+
         File[] allDevices = directory.listFiles();
 
         JSONObject cardDetails = null;

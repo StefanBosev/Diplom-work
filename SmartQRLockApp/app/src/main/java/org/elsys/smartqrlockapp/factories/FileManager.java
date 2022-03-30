@@ -22,13 +22,8 @@ public class FileManager {
         return fileManager;
     }
 
-//    private File devicesDir = new File(this.getFilesDir() + File.separator + "demo-json-dir");
 
-    private FileManager() {
-//        if (!devicesDir.exists()) {
-//            devicesDir.mkdirs();
-//        }
-    }
+    private FileManager() {}
 
     private boolean ifNameExistsInDir(String fileName, File[] directory) {
         for (File file : directory) {
