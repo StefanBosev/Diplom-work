@@ -41,13 +41,6 @@ public class DevicesActivity extends AppCompatActivity {
             LinearLayout.LayoutParams.WRAP_CONTENT
     );
 
-    // List of all devices
-    private static List<String> devices = new ArrayList<>();
-
-    public static void addDevice(String device) {
-        DevicesActivity.devices.add(device);
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

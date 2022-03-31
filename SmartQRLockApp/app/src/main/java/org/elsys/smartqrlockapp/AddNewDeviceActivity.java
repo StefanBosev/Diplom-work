@@ -24,8 +24,6 @@ import java.io.File;
 
 public class AddNewDeviceActivity extends AppCompatActivity {
 
-    private final String devicesDir = "demo-json-dir";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

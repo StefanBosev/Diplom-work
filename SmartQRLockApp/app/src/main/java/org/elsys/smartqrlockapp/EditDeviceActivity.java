@@ -247,7 +247,6 @@ public class EditDeviceActivity extends AppCompatActivity {
         try {
 
             int entriesNum = accessList.getChildCount();
-            System.out.println("child number: " + entriesNum);
 
             for (int i = 0; i < entriesNum; ++i) {
                 CardView child = (CardView) accessList.getChildAt(i);
