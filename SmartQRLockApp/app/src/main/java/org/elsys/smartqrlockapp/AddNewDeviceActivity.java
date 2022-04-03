@@ -61,7 +61,6 @@ public class AddNewDeviceActivity extends AppCompatActivity {
 
         JSONObject deviceData = new JSONObject();
         JSONObject accessList = new JSONObject();
-        JSONObject wifiData = new JSONObject();
 
         try {
 
@@ -81,12 +80,10 @@ public class AddNewDeviceActivity extends AppCompatActivity {
                accessList.put(name.getText().toString(), personalData);
            }
 
-           wifiData.put("wi-fi-name", wifiName.getText().toString());
-           wifiData.put("wi-fi-pass", wifiPassword.getText().toString());
-
             deviceData.put("name", deviceName.getText().toString());
             deviceData.put("place", devicePlacement.getText().toString());
-            deviceData.put("wi-fi", wifiData);
+            deviceData.put("wi-fi-name", wifiName.getText().toString());
+            deviceData.put("wi-fi-pass", wifiPassword.getText().toString());
             deviceData.put("access-list", accessList);
         } catch (JSONException e) {
             e.printStackTrace();

@@ -54,6 +54,8 @@ public class EditDeviceActivity extends AppCompatActivity {
     private JSONObject data;
     private TextView deviceName;
     private TextView devicePlacement;
+    private TextView wifiName;
+    private TextView wifiPassword;
     private LinearLayout accessList;
 
     @Override
@@ -65,6 +67,8 @@ public class EditDeviceActivity extends AppCompatActivity {
         activityBody = findViewById(R.id.editDeviceActivityBody);
         deviceName = findViewById(R.id.setDeviceNameEdit);
         devicePlacement = findViewById(R.id.setDevicePlacementEdit);
+        wifiName = findViewById(R.id.wifiNameEdit);
+        wifiPassword = findViewById(R.id.wifiPassEdit);
         accessList = findViewById(R.id.accessListScrollViewEdit);
 
         deviceName.setHint("Device name");
@@ -74,6 +78,8 @@ public class EditDeviceActivity extends AppCompatActivity {
 
         try {
             data = new JSONObject(deviceData.getString("data"));
+            wifiName.setText(data.getString("wi-fi-name"));
+            wifiPassword.setText(data.getString("wi-fi-pass"));
             deviceName.setText(data.getString("name"));
             devicePlacement.setText(data.getString("place"));
 
