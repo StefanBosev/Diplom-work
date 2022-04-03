@@ -7,8 +7,6 @@ import androidx.cardview.widget.CardView;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.InputType;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -57,10 +55,13 @@ public class AddNewDeviceActivity extends AppCompatActivity {
     private void addToDevicesList() {
         EditText deviceName = (EditText) findViewById(R.id.setDeviceName);
         EditText devicePlacement = (EditText) findViewById(R.id.setDevicePlacement);
-        LinearLayout accessListContainer = findViewById(R.id.addToListViewEdit);
+        EditText wifiName = (EditText) findViewById(R.id.wifiName);
+        EditText wifiPassword = (EditText) findViewById(R.id.wifiPassword);
+        LinearLayout accessListContainer = findViewById(R.id.addToListView);
 
         JSONObject deviceData = new JSONObject();
         JSONObject accessList = new JSONObject();
+        JSONObject wifiData = new JSONObject();
 
         try {
 
@@ -80,8 +81,12 @@ public class AddNewDeviceActivity extends AppCompatActivity {
                accessList.put(name.getText().toString(), personalData);
            }
 
+           wifiData.put("wi-fi-name", wifiName.getText().toString());
+           wifiData.put("wi-fi-pass", wifiPassword.getText().toString());
+
             deviceData.put("name", deviceName.getText().toString());
             deviceData.put("place", devicePlacement.getText().toString());
+            deviceData.put("wi-fi", wifiData);
             deviceData.put("access-list", accessList);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -102,7 +107,7 @@ public class AddNewDeviceActivity extends AppCompatActivity {
     }
 
     private void addNewAccessEntry() {
-        LinearLayout list = findViewById(R.id.addToListViewEdit);
+        LinearLayout list = findViewById(R.id.addToListView);
         CardView newEntry = AccessCardFactory.getInstance().getCard(getApplicationContext(), list, null, null, null);
         newEntry.setClickable(true);
 

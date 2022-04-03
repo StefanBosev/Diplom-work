@@ -11,4 +11,6 @@
     <string name="enter_device_name_hint">Device name</string>
     <string name="enter_device_placement_hint">Device placement</string>
     <string name="title_activity_edit_device">EditDeviceActivity</string>
+    <string name="wifi_name">Wi-Fi name</string>
+    <string name="wifi_pass">Wi-Fi password</string>
 </resources>
