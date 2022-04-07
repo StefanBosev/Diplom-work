@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.FileProvider;
+import androidx.core.widget.NestedScrollView;
 
 import androidmads.library.qrgenearator.QRGContents;
 import androidmads.library.qrgenearator.QRGEncoder;
@@ -18,6 +19,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.Display;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -25,6 +27,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.google.zxing.BarcodeFormat;
@@ -57,7 +60,6 @@ public class EditDeviceActivity extends AppCompatActivity {
     private TextView wifiName;
     private TextView wifiPassword;
     private LinearLayout accessList;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -124,7 +126,6 @@ public class EditDeviceActivity extends AppCompatActivity {
                         });
 
                         builder.create().show();
-
 
                         return true;
                     }
@@ -270,6 +271,8 @@ public class EditDeviceActivity extends AppCompatActivity {
 
             newData.put("name", deviceName.getText().toString());
             newData.put("place", devicePlacement.getText().toString());
+            newData.put("wi-fi-name", wifiName.getText().toString());
+            newData.put("wi-fi-pass", wifiPassword.getText().toString());
             newData.put("access-list", newAccessList);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -278,6 +281,8 @@ public class EditDeviceActivity extends AppCompatActivity {
         File file = new File(filepath);
 
         FileManager fileManager = FileManager.getInstance();
+
+        System.out.println(newData.toString());
 
         fileManager.overwriteFile(file, newData.toString());
     }

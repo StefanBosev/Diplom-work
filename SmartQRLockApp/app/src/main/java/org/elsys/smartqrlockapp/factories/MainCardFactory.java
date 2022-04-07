@@ -33,12 +33,12 @@ public class MainCardFactory {
         );
 
         this.textLayoutParams = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
         );
     }
 
-    public CardView getCard(JSONObject cardInfo, Context applicationContext, ViewGroup activityBody) {
+    public CardView getCard(JSONObject cardInfo, Context applicationContext, ViewGroup activityBody, Integer entriesNum) {
         CardView newDevice = new CardView(applicationContext);
 
         newDevice.setPadding(25, 25, 25, 25);
@@ -49,13 +49,19 @@ public class MainCardFactory {
         newDevice.setMinimumHeight(60);
         newDevice.setClickable(true);
 
+        LinearLayout cardLayout = new LinearLayout(applicationContext);
+        cardLayout.setLayoutParams(this.textLayoutParams);
+        cardLayout.setOrientation(LinearLayout.VERTICAL);
+        cardLayout.setPadding(16, 16, 16, 16);
+
         LinearLayout textLayout = new LinearLayout(applicationContext);
         textLayout.setLayoutParams(this.textLayoutParams);
         textLayout.setOrientation(LinearLayout.VERTICAL);
-        textLayout.setPadding(16, 16, 16, 16);
 
         TextView heading = new TextView(applicationContext);
         TextView secondary = new TextView(applicationContext);
+        TextView entriesNumView = new TextView(applicationContext);
+
 
         String deviceName = "";
         String devicePlace = "";
@@ -77,10 +83,20 @@ public class MainCardFactory {
         secondary.setTextSize(15);
         secondary.setGravity(Gravity.LEFT);
 
+        entriesNumView.setTextSize(13);
+        entriesNumView.setGravity(Gravity.LEFT);
+        entriesNumView.setTextColor(Colors.CARD_SECONDARY_TEXT);
+        if (entriesNum != null) {
+            entriesNumView.setText("Entries: " + entriesNum.toString());
+        }
+
         textLayout.addView(heading);
         textLayout.addView(secondary);
+        textLayout.addView(entriesNumView);
 
-        newDevice.addView(textLayout);
+        cardLayout.addView(textLayout);
+
+        newDevice.addView(cardLayout);
 
         return newDevice;
     }

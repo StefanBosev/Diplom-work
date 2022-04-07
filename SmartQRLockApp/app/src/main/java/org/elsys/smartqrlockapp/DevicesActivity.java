@@ -18,6 +18,7 @@ import android.widget.LinearLayout;
 import org.elsys.smartqrlockapp.factories.FileManager;
 import org.elsys.smartqrlockapp.factories.MainCardFactory;
 import org.elsys.smartqrlockapp.values.Colors;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -26,6 +27,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class DevicesActivity extends AppCompatActivity {
@@ -95,7 +97,23 @@ public class DevicesActivity extends AppCompatActivity {
     public void visualiseDeviceCard(JSONObject cardInfo, String filePath) {
         MainCardFactory mainCardFactory = MainCardFactory.getInstance();
 
-        CardView newDevice = mainCardFactory.getCard(cardInfo, getApplicationContext(), activityBody);
+        Integer countEntries = 0;
+
+        try {
+            JSONObject array = cardInfo.getJSONObject("access-list");
+
+            Iterator<String> it = array.keys();
+
+            while (it.hasNext()) {
+                countEntries++;
+                it.next();
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+        CardView newDevice = mainCardFactory.getCard(cardInfo, getApplicationContext(), activityBody, countEntries);
 
         newDevice.setLayoutParams(DevicesActivity.devicesLayout);
         newDevice.setOnClickListener(new View.OnClickListener() {
