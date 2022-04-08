@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 import com.google.zxing.WriterException;
 
+import org.elsys.smartqrlockapp.values.Colors;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -41,7 +42,7 @@ public class ShowQRActivity extends AppCompatActivity {
         setContentView(R.layout.activity_show_qr);
 
         body = findViewById(R.id.showQRActivityBody);
-        body.setBackgroundColor(Color.WHITE);
+        body.setBackgroundColor(Colors.APP_BACKGROUND);
         qrCodeView = findViewById(R.id.qrCodeView);
 
         map = generateQRMap(getIntent().getStringExtra("data"));

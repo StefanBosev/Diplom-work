@@ -2,10 +2,13 @@ package org.elsys.smartqrlockapp.factories;
 
 import android.util.Log;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -78,6 +81,30 @@ public class FileManager {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
 
+    public JSONObject readFile(File device) {
+        StringBuilder data = new StringBuilder();
+        JSONObject info = null;
+
+        try {
+            BufferedReader bufReader = new BufferedReader(new FileReader(device));
+            String line;
+
+            while ((line = bufReader.readLine()) != null) {
+                data.append(line);
+                data.append('\n');
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            info = new JSONObject(data.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return info;
     }
 }

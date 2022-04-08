@@ -36,6 +36,7 @@ public class DevicesActivity extends AppCompatActivity {
     CoordinatorLayout activityBody;
     // List of devices
     LinearLayout devicesList;
+    FileManager fileManager;
 
     // Layout specifics for each device card
     private static LinearLayout.LayoutParams devicesLayout = new LinearLayout.LayoutParams(
@@ -47,6 +48,7 @@ public class DevicesActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_devices);
+        fileManager = FileManager.getInstance();
 
         // Adding more specifics to the layout of the devices
         devicesLayout.setMargins(25, 5, 25, 10);
@@ -71,7 +73,7 @@ public class DevicesActivity extends AppCompatActivity {
         JSONObject cardDetails = null;
 
         for (File device : allDevices) {
-            cardDetails = readFile(device);
+            cardDetails = fileManager.readFile(device);
 
             if (cardDetails != null) {
                 visualiseDeviceCard(cardDetails, device.getPath());
@@ -89,12 +91,12 @@ public class DevicesActivity extends AppCompatActivity {
     }
 
 
-    public void launchNewDeviceActivity(View v) {
+    private void launchNewDeviceActivity(View v) {
         Intent i = new Intent(this, AddNewDeviceActivity.class);
         startActivity(i);
     }
 
-    public void visualiseDeviceCard(JSONObject cardInfo, String filePath) {
+    private void visualiseDeviceCard(JSONObject cardInfo, String filePath) {
         MainCardFactory mainCardFactory = MainCardFactory.getInstance();
 
         Integer countEntries = 0;
@@ -163,31 +165,5 @@ public class DevicesActivity extends AppCompatActivity {
         });
 
         devicesList.addView(newDevice);
-    }
-
-    private JSONObject readFile(File device) {
-        StringBuilder data = new StringBuilder();
-        JSONObject cardDetails = null;
-
-        try {
-            BufferedReader bufReader = new BufferedReader(new FileReader(device));
-            String line;
-
-            while ((line = bufReader.readLine()) != null) {
-                data.append(line);
-                data.append('\n');
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-
-        try {
-            cardDetails = new JSONObject(data.toString());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        return cardDetails;
     }
 }

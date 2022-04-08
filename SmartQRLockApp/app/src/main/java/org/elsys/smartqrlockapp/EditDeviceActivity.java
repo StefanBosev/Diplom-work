@@ -37,6 +37,7 @@ import com.google.zxing.qrcode.QRCodeWriter;
 
 import org.elsys.smartqrlockapp.factories.AccessCardFactory;
 import org.elsys.smartqrlockapp.factories.FileManager;
+import org.elsys.smartqrlockapp.values.Colors;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -67,6 +68,7 @@ public class EditDeviceActivity extends AppCompatActivity {
 
         deviceData = getIntent().getExtras();
         activityBody = findViewById(R.id.editDeviceActivityBody);
+        activityBody.setBackgroundColor(Colors.APP_BACKGROUND);
         deviceName = findViewById(R.id.setDeviceNameEdit);
         devicePlacement = findViewById(R.id.setDevicePlacementEdit);
         wifiName = findViewById(R.id.wifiNameEdit);

@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import org.elsys.smartqrlockapp.factories.AccessCardFactory;
 import org.elsys.smartqrlockapp.factories.FileManager;
+import org.elsys.smartqrlockapp.values.Colors;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -25,8 +26,10 @@ public class AddNewDeviceActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_add_new_device);
+
+        findViewById(R.id.newDeviceActivityBody).setBackgroundColor(Colors.APP_BACKGROUND);
+
         Button submit = (Button) findViewById(R.id.submit);
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
