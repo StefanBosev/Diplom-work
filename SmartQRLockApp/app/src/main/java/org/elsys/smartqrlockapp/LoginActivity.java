@@ -80,6 +80,18 @@ public class LoginActivity extends AppCompatActivity {
                 goToRegistrationPage();
             }
         });
+
+        File directory = new File(this.getFilesDir() + File.separator + LoginActivity.credentialsDirName);
+
+        if (!directory.exists()) {
+            directory.mkdirs();
+        }
+
+        File file = new File(directory, "file.json");
+
+        if (file.exists()) {
+            register.setVisibility(View.GONE);
+        }
     }
 
 
@@ -122,11 +134,6 @@ public class LoginActivity extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
-        System.out.println(data);
-        System.out.println("Hashed username: " + Arrays.toString(hashedUsername));
-        System.out.println("Hashed password: " + Arrays.toString(hashedPassword));
-        System.out.println(match);
 
         if (match) {
             return 0;
